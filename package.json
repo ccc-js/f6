@@ -1,0 +1,35 @@
+{
+  "name": "f6",
+  "version": "0.4.2",
+  "description": "ES6 Front-End Framework",
+  "main": "f6.js",
+  "dependencies": {},
+  "devDependencies": {
+    "koa": "^2.2.0",
+    "koa-static": "^3.0.0",
+    "mocha": "^3.1.0"
+  },
+  "scripts": {
+    "build": "browserify f6.js -o web/f6.js",
+    "start": "browserify f6.js -o web/f6.js & node server",
+    "test": "mocha"
+  },
+  "bin": {},
+  "keywords": [
+    "SPA",
+    "Framework",
+    "AJAX",
+    "ES6"
+  ],
+  "homepage": "https://github.com/ccckmit/f6",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/ccckmit/f6.git"
+  },
+  "author": {
+    "name": "Chung-Chen Chen",
+    "email": "ccckmit@gmail.com",
+    "url": "http://ccc.nqu.edu.tw"
+  },
+  "license": "MIT"
+}

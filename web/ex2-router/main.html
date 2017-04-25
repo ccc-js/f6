@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head></head>
+<body>
+<div> <a href="#hello">#hello</a> </div>
+<div> <a href="#list/3373">#list/3373</a> </div>
+
+<script src="../f6.js"></script>
+<script>
+async function main() {
+  f6.route(/^hello$/, ()=>alert('hello'))
+  f6.route(/^list\/(\w+)/, (m)=>alert(`list:m[1]=${m[1]}`))
+}
+
+main()
+</script>
+</body>
+</html>
