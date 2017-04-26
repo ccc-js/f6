@@ -1,6 +1,6 @@
 {
   "name": "f6",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "ES6 Front-End Framework",
   "main": "f6.js",
   "dependencies": {
