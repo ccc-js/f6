@@ -121,12 +121,3 @@ f6.init = function () {
 }
 
 f6.init()
-
-/*
-function ajaxFormPost (path, form, callback) {
-  var obj = new window.FormData(form)
-  ajaxPost(path, obj, function (r) {
-    if (callback != null) callback(r)
-  })
-}
-*/

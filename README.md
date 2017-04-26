@@ -24,5 +24,20 @@ The server started at `http://localhost:3000/` , visiting the following page for
 
 * [Example 1 : DOM](web/ex1-dom/) :  `http://localhost:3000/ex1-dom/main.html`
 * [Example 2 : router](web/ex2-router/) :  `http://localhost:3000/ex2-router/main.html`
-* [Example 3 : blog](web/ex3-blog/) :  `http://localhost:3000/ex3-blog/main.html`
+* [Example 3 : blog 1](web/ex3-blog1/) :  `http://localhost:3000/ex3-blog1/main.html`
 
+For the other demo, you should start the server inside the subfolder
+
+```
+$ cd web/ex4-blog2
+$ node server
+```
+
+* [Example 4 : blog 2](web/ex4-blog2/) :  `http://localhost:3000/ex4-blog2/main.html`
+
+```
+$ cd web/ex5-blog3
+$ node server
+```
+
+* [Example 5 : blog 3](web/ex5-blog3/) :  `http://localhost:3000/ex5-blog3/main.html`
