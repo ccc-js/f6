@@ -3,7 +3,9 @@
   "version": "0.5.0",
   "description": "ES6 Front-End Framework",
   "main": "f6.js",
-  "dependencies": {},
+  "dependencies": {
+    "koa-bodyparser": "^4.2.0"
+  },
   "devDependencies": {
     "koa": "^2.2.0",
     "koa-static": "^3.0.0",

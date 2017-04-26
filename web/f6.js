@@ -33,7 +33,7 @@ f6.show = function (node) { node.hidden = undefined }
 
 f6.on = function (obj, event, f) {
   var o = (typeof obj === 'string') ? f6.one(obj) : obj
-  o.addEventListener("click", f)
+  o.addEventListener(event, f)
 }
 
 f6.styleLoad = function (url) {
@@ -62,10 +62,19 @@ f6.scriptLoad = function (url) {
   })
 }
 
+/** ajax with 4 contentType
+ * 1. application/x-www-form-urlencoded  ex: title=test&sub%5B%5D=1&sub%5B%5D=2&sub%5B%5D=3
+ * 2. multipart/form-data                ex: -...Content-Disposition: form-data; name="file"; filename="chrome.png" ... Content-Type: image/png
+ * 3. application/json                   ex: JSON.stringify(o)
+ * 4. text/plain                         ex: hello !
+ */
 f6.ajax = function (arg) {
   var promise = new Promise(function (resolve, reject) {
     var xhr = new window.XMLHttpRequest()
     xhr.open(arg.method, arg.url, true)
+    if (arg.contentType) {
+      xhr.setRequestHeader('Content-Type', arg.contentType)
+    }
     xhr.onreadystatechange = function () {
       if (xhr.readyState !== 4) return
       if (xhr.status === 200) {
@@ -74,16 +83,23 @@ f6.ajax = function (arg) {
         reject(new Error(xhr.statusText))
       }
     }
-    var str = (arg.obj == null) ? null : JSON.stringify(arg.obj)
-    xhr.send(str)
+    xhr.send(arg.body)
   })
   return promise
 }
 
-f6.onready = function (init) {
+f6.ojax = async function (arg) {
+  arg.contentType = 'application/json'
+  if (arg.obj) arg.body = JSON.stringify(arg.obj)
+  console.log(`ojax : arg.body=${arg.body}`)
+  var json = await f6.ajax(arg)
+  console.log('json=' + json)
+  return JSON.parse(json)
+}
+
+f6.onload = function (init) {
   return new Promise(function (resolve, reject) {
     window.onload = function () {
-      console.log('onload')
       init()
       window.onhashchange()
       resolve()

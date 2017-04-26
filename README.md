@@ -1,4 +1,4 @@
-# f6 -- ES6 Single Page Application Framework
+# f6 -- ES6 Front-End Framework
 
 ## Install
 
