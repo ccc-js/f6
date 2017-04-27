@@ -7,7 +7,7 @@
 <script>
 async function main() {
   var pluginHtml = await f6.ajax({method:'GET', url:'plugin.html'})
-  f6.plugin('#pluginBox', pluginHtml)
+  f6.one('#pluginBox').html(pluginHtml)
   await f6.scriptLoad('plugin.js')
 }
 

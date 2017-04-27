@@ -1,13 +1,12 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var R = { map: new Map() }
-
 f6 = module.exports = {
   scriptLoaded: {},
-  router: R
+  router: { map: new Map() }
 }
 
+// onhashchange => route
 f6.route = function (regexp, f) {
-  R.map.set(regexp, f)
+  f6.router.map.set(regexp, f)
   return this
 }
 
@@ -16,26 +15,60 @@ f6.go = function (hash) {
   return this
 }
 
-f6.one = function (query) {
-  return document.querySelector(query)
+// DOM Element
+Element.prototype.one = function (selector) {
+  return this.querySelector(selector)
 }
 
-f6.all = function (query) {
-  return document.querySelectorAll(query)
+Element.prototype.all = function (selector) {
+  return this.querySelectorAll(selector)
 }
 
-f6.plugin = function (query, html) {
-  f6.one(query).innerHTML = html
+Element.prototype.hide = function () {
+  this.hidden = true
 }
 
-f6.hide = function (node) { node.hidden = true }
-f6.show = function (node) { node.hidden = undefined }
+Element.prototype.show = function () {
+  this.hidden = undefined
+}
 
+Element.prototype.html = function (html) {
+  this.innerHTML = html
+}
+
+// NodeList
+NodeList.prototype.each = function (f) {
+  return this.forEach(f)
+}
+
+NodeList.prototype.hide = function () {
+  return this.each(function (x) { x.hide() })
+}
+
+NodeList.prototype.show = function () {
+  return this.each(function (x) { x.show() })
+}
+
+NodeList.prototype.html = function (html) {
+  return this.each(function (x) { x.html(html) })
+}
+
+// DOM short cut
+f6.one = function (selector) {
+  return document.querySelector(selector)
+}
+
+f6.all = function (selector) {
+  return document.querySelectorAll(selector)
+}
+
+// View : Event Handling
 f6.on = function (obj, event, f) {
   var o = (typeof obj === 'string') ? f6.one(obj) : obj
   o.addEventListener(event, f)
 }
 
+// load stylesheet (CSS)
 f6.styleLoad = function (url) {
   var ss = document.createElement('link')
   ss.type = 'text/css'
@@ -44,6 +77,7 @@ f6.styleLoad = function (url) {
   f6.one('head').appendChild(ss)
 }
 
+// load script (JS)
 f6.scriptLoad = function (url) {
   return new Promise(function (resolve, reject) {
     var urlLoaded = f6.scriptLoaded[url]
@@ -62,11 +96,13 @@ f6.scriptLoad = function (url) {
   })
 }
 
-/** ajax with 4 contentType
+/** ajax with 4 contentType , ref : https://imququ.com/post/four-ways-to-post-data-in-http.html
  * 1. application/x-www-form-urlencoded  ex: title=test&sub%5B%5D=1&sub%5B%5D=2&sub%5B%5D=3
  * 2. multipart/form-data                ex: -...Content-Disposition: form-data; name="file"; filename="chrome.png" ... Content-Type: image/png
  * 3. application/json                   ex: JSON.stringify(o)
  * 4. text/plain                         ex: hello !
+ * 5. text/xml                           ex: <?xml version="1.0"?><methodCall> ...
+ * For form, use xhr.send(new window.FormData(form))
  */
 f6.ajax = function (arg) {
   var promise = new Promise(function (resolve, reject) {
@@ -91,45 +127,41 @@ f6.ajax = function (arg) {
 f6.ojax = async function (arg) {
   arg.contentType = 'application/json'
   if (arg.obj) arg.body = JSON.stringify(arg.obj)
-  console.log(`ojax : arg.body=${arg.body}`)
   var json = await f6.ajax(arg)
-  console.log('json=' + json)
   return JSON.parse(json)
 }
 
 f6.onload = function (init) {
   return new Promise(function (resolve, reject) {
-    window.onload = function () {
+    window.addEventListener('load', function () {
       init()
       window.onhashchange()
       resolve()
-    }
+    })
   })
 }
 
-f6.init = function () {
-  window.onhashchange = function () {
-    var hash = window.location.hash.trim().substring(1)
-    for (let [regexp, f] of R.map) {
-      var m = hash.match(regexp)
-      if (m) {
-        f(m, hash)
-        break
-      }
+window.onhashchange = function () {
+  var hash = window.location.hash.trim().substring(1)
+  for (let [regexp, f] of f6.router.map) {
+    var m = hash.match(regexp)
+    if (m) {
+      f(m, hash)
+      break
     }
   }
+}
+
+/*
+f6.init = function () {
   return this
 }
 
 f6.init()
 
-/*
-function ajaxFormPost (path, form, callback) {
-  var obj = new window.FormData(form)
-  ajaxPost(path, obj, function (r) {
-    if (callback != null) callback(r)
-  })
+f6.plugin = function (selector, html) {
+  f6.one(selector).innerHTML = html
 }
-*/
 
+*/
 },{}]},{},[1]);

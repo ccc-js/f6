@@ -1,12 +1,11 @@
-var R = { map: new Map() }
-
 f6 = module.exports = {
   scriptLoaded: {},
-  router: R
+  router: { map: new Map() }
 }
 
+// onhashchange => route
 f6.route = function (regexp, f) {
-  R.map.set(regexp, f)
+  f6.router.map.set(regexp, f)
   return this
 }
 
@@ -15,26 +14,60 @@ f6.go = function (hash) {
   return this
 }
 
-f6.one = function (query) {
-  return document.querySelector(query)
+// DOM Element
+Element.prototype.one = function (selector) {
+  return this.querySelector(selector)
 }
 
-f6.all = function (query) {
-  return document.querySelectorAll(query)
+Element.prototype.all = function (selector) {
+  return this.querySelectorAll(selector)
 }
 
-f6.plugin = function (query, html) {
-  f6.one(query).innerHTML = html
+Element.prototype.hide = function () {
+  this.hidden = true
 }
 
-f6.hide = function (node) { node.hidden = true }
-f6.show = function (node) { node.hidden = undefined }
+Element.prototype.show = function () {
+  this.hidden = undefined
+}
 
+Element.prototype.html = function (html) {
+  this.innerHTML = html
+}
+
+// NodeList
+NodeList.prototype.each = function (f) {
+  return this.forEach(f)
+}
+
+NodeList.prototype.hide = function () {
+  return this.each(function (x) { x.hide() })
+}
+
+NodeList.prototype.show = function () {
+  return this.each(function (x) { x.show() })
+}
+
+NodeList.prototype.html = function (html) {
+  return this.each(function (x) { x.html(html) })
+}
+
+// DOM short cut
+f6.one = function (selector) {
+  return document.querySelector(selector)
+}
+
+f6.all = function (selector) {
+  return document.querySelectorAll(selector)
+}
+
+// View : Event Handling
 f6.on = function (obj, event, f) {
   var o = (typeof obj === 'string') ? f6.one(obj) : obj
   o.addEventListener(event, f)
 }
 
+// load stylesheet (CSS)
 f6.styleLoad = function (url) {
   var ss = document.createElement('link')
   ss.type = 'text/css'
@@ -43,6 +76,7 @@ f6.styleLoad = function (url) {
   f6.one('head').appendChild(ss)
 }
 
+// load script (JS)
 f6.scriptLoad = function (url) {
   return new Promise(function (resolve, reject) {
     var urlLoaded = f6.scriptLoaded[url]
@@ -98,26 +132,34 @@ f6.ojax = async function (arg) {
 
 f6.onload = function (init) {
   return new Promise(function (resolve, reject) {
-    window.onload = function () {
+    window.addEventListener('load', function () {
       init()
       window.onhashchange()
       resolve()
-    }
+    })
   })
 }
 
-f6.init = function () {
-  window.onhashchange = function () {
-    var hash = window.location.hash.trim().substring(1)
-    for (let [regexp, f] of R.map) {
-      var m = hash.match(regexp)
-      if (m) {
-        f(m, hash)
-        break
-      }
+window.onhashchange = function () {
+  var hash = window.location.hash.trim().substring(1)
+  for (let [regexp, f] of f6.router.map) {
+    var m = hash.match(regexp)
+    if (m) {
+      f(m, hash)
+      break
     }
   }
+}
+
+/*
+f6.init = function () {
   return this
 }
 
 f6.init()
+
+f6.plugin = function (selector, html) {
+  f6.one(selector).innerHTML = html
+}
+
+*/
