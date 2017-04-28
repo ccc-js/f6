@@ -1,3 +1,11 @@
+/* SMS.post
+  var postDiv = document.createElement('div')
+  postDiv.innerHTML = r.responseText
+  one('#posts').insertBefore(postDiv, one('#posts').firstChild)
+  var mtNode = one('#postMt' + post._id)
+  var htmlNode = one('#postHtml' + post._id)
+*/
+
 f6 = module.exports = {
   scriptLoaded: {},
   router: { map: new Map() }
@@ -103,6 +111,14 @@ f6.scriptLoad = function (url) {
  * 5. text/xml                           ex: <?xml version="1.0"?><methodCall> ...
  * For form, use xhr.send(new window.FormData(form))
  */
+/** ajax with 4 contentType , ref : https://imququ.com/post/four-ways-to-post-data-in-http.html
+ * 1. application/x-www-form-urlencoded  ex: title=test&sub%5B%5D=1&sub%5B%5D=2&sub%5B%5D=3
+ * 2. multipart/form-data                ex: -...Content-Disposition: form-data; name="file"; filename="chrome.png" ... Content-Type: image/png
+ * 3. application/json                   ex: JSON.stringify(o)
+ * 4. text/plain                         ex: hello !
+ * 5. text/xml                           ex: <?xml version="1.0"?><methodCall> ...
+ * For form, use xhr.send(new window.FormData(form))
+ */
 f6.ajax = function (arg) {
   var promise = new Promise(function (resolve, reject) {
     var xhr = new window.XMLHttpRequest()
@@ -113,21 +129,32 @@ f6.ajax = function (arg) {
     xhr.onreadystatechange = function () {
       if (xhr.readyState !== 4) return
       if (xhr.status === 200) {
+        if (arg.alert) alert('Success!')
         resolve(xhr.responseText)
       } else {
+        if (arg.alert) alert('Fail!')
         reject(new Error(xhr.statusText))
       }
     }
+    console.log('ajax:arg='+JSON.stringify(arg))
     xhr.send(arg.body)
   })
   return promise
 }
 
-f6.ojax = async function (arg) {
+f6.ojax = async function (arg, obj) {
   arg.contentType = 'application/json'
-  if (arg.obj) arg.body = JSON.stringify(arg.obj)
+  if (obj) arg.body = JSON.stringify(obj)
   var json = await f6.ajax(arg)
   return JSON.parse(json)
+}
+
+f6.fjax = function (arg, form) {
+  form.action = arg.url
+  form.method = arg.method
+//  arg.contentType = 'multipart/form-data; boundary=----WebKitFormBoundaryrGKCBY7qhFd3TrwA'
+  arg.body = new window.FormData(form)
+  return f6.ajax(arg)
 }
 
 f6.onload = function (init) {

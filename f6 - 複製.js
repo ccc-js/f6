@@ -1,4 +1,3 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 f6 = module.exports = {
   scriptLoaded: {},
   router: { map: new Map() }
@@ -104,14 +103,6 @@ f6.scriptLoad = function (url) {
  * 5. text/xml                           ex: <?xml version="1.0"?><methodCall> ...
  * For form, use xhr.send(new window.FormData(form))
  */
-/** ajax with 4 contentType , ref : https://imququ.com/post/four-ways-to-post-data-in-http.html
- * 1. application/x-www-form-urlencoded  ex: title=test&sub%5B%5D=1&sub%5B%5D=2&sub%5B%5D=3
- * 2. multipart/form-data                ex: -...Content-Disposition: form-data; name="file"; filename="chrome.png" ... Content-Type: image/png
- * 3. application/json                   ex: JSON.stringify(o)
- * 4. text/plain                         ex: hello !
- * 5. text/xml                           ex: <?xml version="1.0"?><methodCall> ...
- * For form, use xhr.send(new window.FormData(form))
- */
 f6.ajax = function (arg) {
   var promise = new Promise(function (resolve, reject) {
     var xhr = new window.XMLHttpRequest()
@@ -122,32 +113,28 @@ f6.ajax = function (arg) {
     xhr.onreadystatechange = function () {
       if (xhr.readyState !== 4) return
       if (xhr.status === 200) {
-        if (arg.alert) alert('Success!')
         resolve(xhr.responseText)
       } else {
-        if (arg.alert) alert('Fail!')
         reject(new Error(xhr.statusText))
       }
     }
-    console.log('ajax:arg='+JSON.stringify(arg))
     xhr.send(arg.body)
   })
   return promise
 }
 
-f6.ojax = async function (arg, obj) {
+f6.ojax = async function (arg) {
   arg.contentType = 'application/json'
-  if (obj) arg.body = JSON.stringify(obj)
+  if (arg.obj) arg.body = JSON.stringify(arg.obj)
   var json = await f6.ajax(arg)
   return JSON.parse(json)
 }
 
-f6.fjax = function (arg, form) {
-  form.action = arg.url
-  form.method = arg.method
-//  arg.contentType = 'multipart/form-data; boundary=----WebKitFormBoundaryrGKCBY7qhFd3TrwA'
-  arg.body = new window.FormData(form)
-  return f6.ajax(arg)
+f6.fjax = async function (arg) {
+  arg.contentType = 'multipart/form-data'
+  if (arg.form) arg.body = new window.formData(form)
+  var json = await f6.ajax(arg)
+  return JSON.parse(json)
 }
 
 f6.onload = function (init) {
@@ -183,4 +170,3 @@ f6.plugin = function (selector, html) {
 }
 
 */
-},{}]},{},[1]);

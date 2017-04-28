@@ -34,7 +34,7 @@ async function create () {
     created_at: new Date()
   }
   console.log(`create:post=${JSON.stringify(post)}`)
-  await f6.ojax({method: 'POST', url: '/post', obj: post})
+  await f6.ojax({method: 'POST', url: '/post'}, post)
 //  posts.push(post)
   f6.go('') // list #
 }

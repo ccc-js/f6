@@ -4,6 +4,7 @@
   "description": "ES6 Front-End Framework",
   "main": "f6.js",
   "dependencies": {
+    "async-busboy": "^0.4.0",
     "koa-bodyparser": "^4.2.0"
   },
   "devDependencies": {
