@@ -41,3 +41,18 @@ $ node server
 ```
 
 * [Example 5 : blogInAjax](web/ex5-blogInAjax/) :  `http://localhost:3000/ex5-blogInAjax/main.html`
+
+
+```
+$ cd web/ex6-upload
+$ node server
+```
+
+* [Example 6 : upload](web/ex6-upload/) :  `http://localhost:3000/ex6-upload/upload.html`
+
+```
+$ cd web/ex7-uploadAjax
+$ node server
+```
+
+* [Example 7 : uploadAjax](web/ex7-uploadAjax/) :  `http://localhost:3000/ex7-uploadAjax/upload.html`

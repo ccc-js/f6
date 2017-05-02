@@ -20,4 +20,4 @@ router.post('/upload', async function (ctx, next) {
   ctx.body = JSON.stringify(files, null, 2)
 })
 
-app.use(serve('public')).use(router.routes()).listen(3000)
+app.use(serve('../')).use(router.routes()).listen(3000)

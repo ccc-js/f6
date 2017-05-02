@@ -1,11 +1,3 @@
-/* SMS.post
-  var postDiv = document.createElement('div')
-  postDiv.innerHTML = r.responseText
-  one('#posts').insertBefore(postDiv, one('#posts').firstChild)
-  var mtNode = one('#postMt' + post._id)
-  var htmlNode = one('#postHtml' + post._id)
-*/
-
 f6 = module.exports = {
   scriptLoaded: {},
   router: { map: new Map() }
@@ -33,34 +25,66 @@ Element.prototype.all = function (selector) {
 
 Element.prototype.hide = function () {
   this.hidden = true
+  return this
 }
 
 Element.prototype.show = function () {
   this.hidden = undefined
+  return this
 }
 
 Element.prototype.html = function (html) {
   this.innerHTML = html
+  return this
 }
 
 // NodeList
 NodeList.prototype.each = function (f) {
-  return this.forEach(f)
+  this.forEach(f)
+  return this
 }
 
 NodeList.prototype.hide = function () {
-  return this.each(function (x) { x.hide() })
+  this.each(function (x) { x.hide() })
+  return this
 }
 
 NodeList.prototype.show = function () {
-  return this.each(function (x) { x.show() })
+  this.each(function (x) { x.show() })
+  return this
 }
 
 NodeList.prototype.html = function (html) {
-  return this.each(function (x) { x.html(html) })
+  this.each(function (x) { x.html(html) })
+  return this
 }
 
-// DOM short cut
+// ==> not test yet
+f6.nodes = function (html) {
+  var div = document.createElement('div')
+  div.innerHTML = html
+  var childNodes = div.childNodes
+  delete div
+  return childNodes
+}
+
+NodeList.prototype.unshift = function (html) {
+  var nodes = f6.nodes(html)
+  for (var i in div.childNodes) {
+    this.insertBefore(nodes[i], this.firstChild)
+  }
+  return this
+}
+
+NodeList.prototype.push = function (html) {
+  var nodes = f6.nodes(html)
+  for (var i in div.childNodes) {
+    this.appendChild(nodes[i])
+  }
+  return this
+}
+
+// DOM short cut 
 f6.one = function (selector) {
   return document.querySelector(selector)
 }
@@ -103,14 +127,6 @@ f6.scriptLoad = function (url) {
   })
 }
 
-/** ajax with 4 contentType , ref : https://imququ.com/post/four-ways-to-post-data-in-http.html
- * 1. application/x-www-form-urlencoded  ex: title=test&sub%5B%5D=1&sub%5B%5D=2&sub%5B%5D=3
- * 2. multipart/form-data                ex: -...Content-Disposition: form-data; name="file"; filename="chrome.png" ... Content-Type: image/png
- * 3. application/json                   ex: JSON.stringify(o)
- * 4. text/plain                         ex: hello !
- * 5. text/xml                           ex: <?xml version="1.0"?><methodCall> ...
- * For form, use xhr.send(new window.FormData(form))
- */
 /** ajax with 4 contentType , ref : https://imququ.com/post/four-ways-to-post-data-in-http.html
  * 1. application/x-www-form-urlencoded  ex: title=test&sub%5B%5D=1&sub%5B%5D=2&sub%5B%5D=3
  * 2. multipart/form-data                ex: -...Content-Disposition: form-data; name="file"; filename="chrome.png" ... Content-Type: image/png
