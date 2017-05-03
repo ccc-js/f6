@@ -193,16 +193,3 @@ window.onhashchange = function () {
     }
   }
 }
-
-/*
-f6.init = function () {
-  return this
-}
-
-f6.init()
-
-f6.plugin = function (selector, html) {
-  f6.one(selector).innerHTML = html
-}
-
-*/

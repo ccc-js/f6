@@ -3,12 +3,13 @@
   "version": "1.1.0",
   "description": "ES6 Front-End Framework",
   "main": "f6.js",
-  "dependencies": {
-    "async-busboy": "^0.4.0",
-    "koa-bodyparser": "^4.2.0"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "async-busboy": "^0.4.0",
     "koa": "^2.2.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-logger": "^2.0.1",
+    "koa-router": "^7.1.1",
     "koa-static": "^3.0.0",
     "mocha": "^3.1.0"
   },
