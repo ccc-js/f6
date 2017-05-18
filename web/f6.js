@@ -10,9 +10,31 @@ f6.route = function (regexp, f) {
   return this
 }
 
-f6.go = function (hash) {
+f6.onhash = function () {
+  var promise = new Promise(function (resolve, reject) {
+    var hash = window.location.hash.trim().substring(1)
+    var m
+    for (let [regexp, f] of f6.router.map) {
+      m = hash.match(regexp)
+      if (m) {
+        f(m, hash)
+        resolve(m)
+        break
+      }
+    }
+    if (!m) reject(new Error('no route match hash'))
+  })
+  return promise
+}
+
+window.onhashchange = function () {
+  f6.onhash()
+}
+
+f6.go = function () {
   window.location.hash = '#' + hash
-  return this
+  return f6.onhash()
+//  return this
 }
 
 // DOM Element
@@ -184,27 +206,6 @@ f6.onload = function (init) {
   })
 }
 
-window.onhashchange = function () {
-  var hash = window.location.hash.trim().substring(1)
-  for (let [regexp, f] of f6.router.map) {
-    var m = hash.match(regexp)
-    if (m) {
-      f(m, hash)
-      break
-    }
-  }
-}
 
-/*
-f6.init = function () {
-  return this
-}
 
-f6.init()
-
-f6.plugin = function (selector, html) {
-  f6.one(selector).innerHTML = html
-}
-
-*/
 },{}]},{},[1]);
