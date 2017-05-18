@@ -31,7 +31,7 @@ window.onhashchange = function () {
   f6.onhash()
 }
 
-f6.go = function () {
+f6.go = function (hash) {
   window.location.hash = '#' + hash
   return f6.onhash()
 //  return this
