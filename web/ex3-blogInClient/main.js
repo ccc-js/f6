@@ -35,7 +35,9 @@ async function create () {
     created_at: new Date(),
   }
   posts.push(post)
-  f6.go('') // list #
+//  alert('before go()')
+  await f6.go('') // list #
+//  alert('after go()')
 }
 
 async function show (m) {
